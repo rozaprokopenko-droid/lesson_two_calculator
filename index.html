@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Удобный сайт для ведения семейного бюджета: доходы, расходы и финансовый баланс за месяц.">
+    <title>Семейный бюджет</title>
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <!-- Шапка лендинга -->
+    <header class="hero">
+        <nav class="top-nav">
+            <span class="logo">FamilyBudget</span>
+            <a class="nav-link" href="#calculator">К калькулятору</a>
+        </nav>
+
+        <div class="hero-content">
+            <h1>Контролируйте семейные финансы легко и наглядно</h1>
+            <p>
+                Небольшой помощник для расчета ежемесячного бюджета:
+                внесите доходы и расходы, чтобы сразу увидеть итоговый баланс.
+            </p>
+            <a class="hero-cta" href="#calculator">Начать расчет</a>
+        </div>
+    </header>
+
+    <!-- Блок преимуществ -->
+    <section class="features" aria-label="Преимущества сервиса">
+        <article class="feature-card">
+            <h2>Быстрый старт</h2>
+            <p>Все данные в одной форме, без сложных настроек.</p>
+        </article>
+        <article class="feature-card">
+            <h2>Прозрачность расходов</h2>
+            <p>Отдельно учитывайте обычные и судебные расходы семьи.</p>
+        </article>
+        <article class="feature-card">
+            <h2>Смена темы</h2>
+            <p>Переключайте светлую и темную темы в один клик.</p>
+        </article>
+    </section>
+
+    <!-- Основной функционал: калькулятор бюджета -->
+    <main id="calculator" class="container">
+        <h2 class="calculator-title">Калькулятор семейного бюджета</h2>
+
+        <!-- ДОХОДЫ -->
+        <section class="section">
+            <h3>Доходы</h3>
+            <label>Основной доход (руб):
+                <input type="number" id="incomeMain" placeholder="Например: 50000">
+            </label>
+
+            <label>Дополнительный доход (руб):
+                <input type="number" id="incomeExtra" placeholder="Например: 10000">
+            </label>
+        </section>
+
+        <!-- РАСХОДЫ -->
+        <section class="section">
+            <h3>Расходы</h3>
+
+            <label>Жилье (аренда/ипотека):
+                <input type="number" id="expenseHousing">
+            </label>
+
+            <label>Еда:
+                <input type="number" id="expenseFood">
+            </label>
+
+            <label>Транспорт:
+                <input type="number" id="expenseTransport">
+            </label>
+
+            <label>Коммунальные услуги:
+                <input type="number" id="expenseUtilities">
+            </label>
+
+            <label>Развлечения:
+                <input type="number" id="expenseFun">
+            </label>
+
+            <label>Прочие расходы:
+                <input type="number" id="expenseOther">
+            </label>
+        </section>
+
+        <!-- СУДЕБНЫЕ РАСХОДЫ -->
+        <section class="section">
+            <h3>Судебные расходы</h3>
+
+            <label>Госпошлина:
+                <input type="number" id="courtFee">
+            </label>
+
+            <label>Юридические услуги:
+                <input type="number" id="lawyerFee">
+            </label>
+
+            <label>Прочие судебные расходы:
+                <input type="number" id="courtOther">
+            </label>
+        </section>
+
+        <!-- КНОПКА РАСЧЕТА -->
+        <button class="calculate-btn" id="calculateBtn" type="button">Рассчитать бюджет</button>
+
+        <!-- РЕЗУЛЬТАТ -->
+        <div id="result" class="result"></div>
+    </main>
+
+    <!-- Подвал -->
+    <footer class="footer">
+        <p>Семейный бюджет - учебный проект.</p>
+    </footer>
+
+    <!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ (правый нижний угол) -->
+    <button id="themeToggle" class="theme-toggle" type="button">Тёмная тема</button>
+
+    <script src="scripts/main.js"></script>
+</body>
+</html>
