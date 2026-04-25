@@ -2,122 +2,415 @@
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Удобный сайт для ведения семейного бюджета: доходы, расходы и финансовый баланс за месяц.">
-    <title>Семейный бюджет</title>
-    <link rel="stylesheet" href="styles/main.css">
+    <title>Калькулятор семейного бюджета</title>
+    <style>
+        :root {
+            --bg-color: #f4f6f8;
+            --text-color: #1f2937;
+            --container-bg: #ffffff;
+            --container-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            --input-bg: #ffffff;
+            --input-border: #c9d2dd;
+            --input-placeholder: #6b7280;
+            --input-focus-border: #007bff;
+            --input-focus-shadow: 0 0 0 3px rgba(0, 123, 255, 0.2);
+            --result-bg: #e9f5e9;
+            --result-negative-bg: #ffe5e5;
+            --toggle-bg: #111827;
+            --toggle-hover-bg: #000000;
+            --toggle-text: #ffffff;
+            --toggle-shadow: 0 4px 14px rgba(0, 0, 0, 0.2);
+        }
+
+        body.dark-theme {
+            --bg-color: #111827;
+            --text-color: #e5e7eb;
+            --container-bg: #1f2937;
+            --container-shadow: 0 10px 28px rgba(0, 0, 0, 0.55);
+            --input-bg: #0f172a;
+            --input-border: #93c5fd;
+            --input-placeholder: #cbd5e1;
+            --input-focus-border: #60a5fa;
+            --input-focus-shadow: 0 0 0 3px rgba(96, 165, 250, 0.32);
+            --result-bg: #1f4f3a;
+            --result-negative-bg: #5d2a2a;
+            --toggle-bg: #f9fafb;
+            --toggle-hover-bg: #d1d5db;
+            --toggle-text: #111827;
+            --toggle-shadow: 0 10px 24px rgba(0, 0, 0, 0.5);
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            padding: 20px;
+            transition: background 0.45s ease, color 0.45s ease;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: auto;
+            background: var(--container-bg);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: var(--container-shadow);
+            transition: background 0.45s ease, box-shadow 0.55s ease;
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        .section {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-top: 10px;
+        }
+
+        input {
+            width: 100%;
+            padding: 8px;
+            margin-top: 5px;
+            background: var(--input-bg);
+            color: var(--text-color);
+            border: 1px solid var(--input-border);
+            border-radius: 5px;
+            box-sizing: border-box;
+            transition: background 0.3s ease, color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        input::placeholder {
+            color: var(--input-placeholder);
+            opacity: 1;
+        }
+
+        input:focus {
+            outline: none;
+            border-color: var(--input-focus-border);
+            box-shadow: var(--input-focus-shadow);
+        }
+
+        .calculate-btn {
+            margin-top: 20px;
+            width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .calculate-btn:hover {
+            background: #0056b3;
+        }
+
+        .export-btn {
+            margin-top: 10px;
+            width: 100%;
+            padding: 10px;
+            background: #16a34a;
+            color: white;
+            border: none;
+            font-size: 16px;
+            cursor: pointer;
+            border-radius: 5px;
+        }
+
+        .export-btn:hover {
+            background: #15803d;
+        }
+
+        .result {
+            margin-top: 20px;
+            font-size: 18px;
+            padding: 10px;
+            background: var(--result-bg);
+            border-radius: 5px;
+            transition: background 0.25s ease;
+        }
+
+        .negative {
+            background: var(--result-negative-bg);
+        }
+
+        .theme-toggle {
+            position: fixed;
+            right: 20px;
+            bottom: 20px;
+            width: auto;
+            min-width: 145px;
+            margin-top: 0;
+            padding: 10px 14px;
+            border-radius: 999px;
+            background: var(--toggle-bg);
+            color: var(--toggle-text);
+            box-shadow: var(--toggle-shadow);
+            z-index: 1000;
+            transition: background 0.3s ease, color 0.3s ease, box-shadow 0.5s ease, transform 0.1s ease;
+        }
+
+        .theme-toggle:hover {
+            background: var(--toggle-hover-bg);
+        }
+
+        .theme-toggle:active {
+            transform: translateY(1px);
+        }
+    </style>
 </head>
 <body>
-    <!-- Шапка лендинга -->
-    <header class="hero">
-        <nav class="top-nav">
-            <span class="logo">FamilyBudget</span>
-            <a class="nav-link" href="#calculator">К калькулятору</a>
-        </nav>
 
-        <div class="hero-content">
-            <h1>Контролируйте семейные финансы легко и наглядно</h1>
-            <p>
-                Небольшой помощник для расчета ежемесячного бюджета:
-                внесите доходы и расходы, чтобы сразу увидеть итоговый баланс.
-            </p>
-            <a class="hero-cta" href="#calculator">Начать расчет</a>
-        </div>
-    </header>
+<div class="container">
+    <h1>Калькулятор семейного бюджета</h1>
 
-    <!-- Блок преимуществ -->
-    <section class="features" aria-label="Преимущества сервиса">
-        <article class="feature-card">
-            <h2>Быстрый старт</h2>
-            <p>Все данные в одной форме, без сложных настроек.</p>
-        </article>
-        <article class="feature-card">
-            <h2>Прозрачность расходов</h2>
-            <p>Отдельно учитывайте обычные и судебные расходы семьи.</p>
-        </article>
-        <article class="feature-card">
-            <h2>Смена темы</h2>
-            <p>Переключайте светлую и темную темы в один клик.</p>
-        </article>
-    </section>
+    <!-- ДОХОДЫ -->
+    <div class="section">
+        <h2>Доходы</h2>
+        <label>Основной доход (руб):
+            <input type="number" id="incomeMain" placeholder="Например: 50000">
+        </label>
 
-    <!-- Основной функционал: калькулятор бюджета -->
-    <main id="calculator" class="container">
-        <h2 class="calculator-title">Калькулятор семейного бюджета</h2>
+        <label>Дополнительный доход (руб):
+            <input type="number" id="incomeExtra" placeholder="Например: 10000">
+        </label>
+    </div>
 
-        <!-- ДОХОДЫ -->
-        <section class="section">
-            <h3>Доходы</h3>
-            <label>Основной доход (руб):
-                <input type="number" id="incomeMain" placeholder="Например: 50000">
-            </label>
+    <!-- РАСХОДЫ -->
+    <div class="section">
+        <h2>Расходы</h2>
 
-            <label>Дополнительный доход (руб):
-                <input type="number" id="incomeExtra" placeholder="Например: 10000">
-            </label>
-        </section>
+        <label>Жильё (аренда/ипотека):
+            <input type="number" id="expenseHousing">
+        </label>
 
-        <!-- РАСХОДЫ -->
-        <section class="section">
-            <h3>Расходы</h3>
+        <label>Еда:
+            <input type="number" id="expenseFood">
+        </label>
 
-            <label>Жилье (аренда/ипотека):
-                <input type="number" id="expenseHousing">
-            </label>
+        <label>Транспорт:
+            <input type="number" id="expenseTransport">
+        </label>
 
-            <label>Еда:
-                <input type="number" id="expenseFood">
-            </label>
+        <label>Коммунальные услуги:
+            <input type="number" id="expenseUtilities">
+        </label>
 
-            <label>Транспорт:
-                <input type="number" id="expenseTransport">
-            </label>
+        <label>Развлечения:
+            <input type="number" id="expenseFun">
+        </label>
 
-            <label>Коммунальные услуги:
-                <input type="number" id="expenseUtilities">
-            </label>
+        <label>Прочие расходы:
+            <input type="number" id="expenseOther">
+        </label>
+    </div>
 
-            <label>Развлечения:
-                <input type="number" id="expenseFun">
-            </label>
+    <!-- СУДЕБНЫЕ РАСХОДЫ -->
+    <div class="section">
+        <h2>Судебные расходы</h2>
 
-            <label>Прочие расходы:
-                <input type="number" id="expenseOther">
-            </label>
-        </section>
+        <label>Госпошлина:
+            <input type="number" id="courtFee">
+        </label>
 
-        <!-- СУДЕБНЫЕ РАСХОДЫ -->
-        <section class="section">
-            <h3>Судебные расходы</h3>
+        <label>Юридические услуги:
+            <input type="number" id="lawyerFee">
+        </label>
 
-            <label>Госпошлина:
-                <input type="number" id="courtFee">
-            </label>
+        <label>Прочие судебные расходы:
+            <input type="number" id="courtOther">
+        </label>
+    </div>
 
-            <label>Юридические услуги:
-                <input type="number" id="lawyerFee">
-            </label>
+    <!-- КНОПКА РАСЧЕТА -->
+    <button class="calculate-btn" onclick="calculateBudget()">Рассчитать бюджет</button>
+    
+    <!-- КНОПКА ВЫГРУЗКИ ОТЧЕТА В НОВУЮ ВКЛАДКУ -->
+    <button class="export-btn" type="button" onclick="openReportTab()">Выгрузить отчет в новую вкладку</button>
 
-            <label>Прочие судебные расходы:
-                <input type="number" id="courtOther">
-            </label>
-        </section>
+    <!-- РЕЗУЛЬТАТ -->
+    <div id="result" class="result"></div>
+</div>
 
-        <!-- КНОПКА РАСЧЕТА -->
-        <button class="calculate-btn" id="calculateBtn" type="button">Рассчитать бюджет</button>
+<!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ (правый нижний угол) -->
+<button id="themeToggle" class="theme-toggle" type="button">Тёмная тема</button>
 
-        <!-- РЕЗУЛЬТАТ -->
-        <div id="result" class="result"></div>
-    </main>
+<script>
+    const themeToggleButton = document.getElementById("themeToggle");
 
-    <!-- Подвал -->
-    <footer class="footer">
-        <p>Семейный бюджет - учебный проект.</p>
-    </footer>
+    function updateThemeButtonText() {
+        const isDarkTheme = document.body.classList.contains("dark-theme");
+        themeToggleButton.textContent = isDarkTheme ? "Светлая тема" : "Тёмная тема";
+    }
 
-    <!-- КНОПКА ПЕРЕКЛЮЧЕНИЯ ТЕМЫ (правый нижний угол) -->
-    <button id="themeToggle" class="theme-toggle" type="button">Тёмная тема</button>
+    function applySavedTheme() {
+        const savedTheme = localStorage.getItem("budgetTheme");
+        if (savedTheme === "dark") {
+            document.body.classList.add("dark-theme");
+        }
+        updateThemeButtonText();
+    }
 
-    <script src="scripts/main.js"></script>
+    function toggleTheme() {
+        document.body.classList.toggle("dark-theme");
+        const isDarkTheme = document.body.classList.contains("dark-theme");
+        localStorage.setItem("budgetTheme", isDarkTheme ? "dark" : "light");
+        updateThemeButtonText();
+    }
+
+    themeToggleButton.addEventListener("click", toggleTheme);
+    applySavedTheme();
+
+    function getValue(id) {
+        return parseFloat(document.getElementById(id).value) || 0;
+    }
+
+    function collectBudgetData() {
+        const incomeItems = [
+            { name: "Основной доход", value: getValue("incomeMain") },
+            { name: "Дополнительный доход", value: getValue("incomeExtra") }
+        ];
+
+        const expenseItems = [
+            { name: "Жильё (аренда/ипотека)", value: getValue("expenseHousing") },
+            { name: "Еда", value: getValue("expenseFood") },
+            { name: "Транспорт", value: getValue("expenseTransport") },
+            { name: "Коммунальные услуги", value: getValue("expenseUtilities") },
+            { name: "Развлечения", value: getValue("expenseFun") },
+            { name: "Прочие расходы", value: getValue("expenseOther") }
+        ];
+
+        const courtExpenseItems = [
+            { name: "Госпошлина", value: getValue("courtFee") },
+            { name: "Юридические услуги", value: getValue("lawyerFee") },
+            { name: "Прочие судебные расходы", value: getValue("courtOther") }
+        ];
+
+        const income = incomeItems.reduce((sum, item) => sum + item.value, 0);
+        const regularExpenses = expenseItems.reduce((sum, item) => sum + item.value, 0);
+        const courtExpenses = courtExpenseItems.reduce((sum, item) => sum + item.value, 0);
+        const totalExpenses = regularExpenses + courtExpenses;
+        const balance = income - totalExpenses;
+
+        return {
+            incomeItems,
+            expenseItems,
+            courtExpenseItems,
+            income,
+            courtExpenses,
+            totalExpenses,
+            balance
+        };
+    }
+
+    function calculateBudget() {
+        const data = collectBudgetData();
+
+        let resultDiv = document.getElementById("result");
+
+        let resultHTML = `
+            <strong>Общий доход:</strong> ${data.income.toLocaleString()} руб.<br>
+            <strong>Общие расходы:</strong> ${data.totalExpenses.toLocaleString()} руб.<br>
+            <strong>В том числе судебные:</strong> ${data.courtExpenses.toLocaleString()} руб.<br>
+            <hr>
+            <strong>Баланс:</strong> ${data.balance.toLocaleString()} руб.
+        `;
+
+        resultDiv.innerHTML = resultHTML;
+
+        // Цвет результата
+        if (data.balance < 0) {
+            resultDiv.classList.add("negative");
+        } else {
+            resultDiv.classList.remove("negative");
+        }
+    }
+
+    function openReportTab() {
+        const data = collectBudgetData();
+        const reportWindow = window.open("", "_blank");
+
+        if (!reportWindow) {
+            alert("Браузер заблокировал всплывающую вкладку. Разрешите всплывающие окна для этого сайта.");
+            return;
+        }
+
+        const formatRows = (items) => {
+            return items.map((item) => `
+                <tr>
+                    <td>${item.name}</td>
+                    <td>${item.value.toLocaleString()} руб.</td>
+                </tr>
+            `).join("");
+        };
+
+        reportWindow.document.write(`
+            <!DOCTYPE html>
+            <html lang="ru">
+            <head>
+                <meta charset="UTF-8">
+                <title>Отчет по семейному бюджету</title>
+                <style>
+                    body { font-family: Arial, sans-serif; padding: 20px; color: #111827; }
+                    h1, h2 { margin-bottom: 10px; }
+                    table { width: 100%; border-collapse: collapse; margin-bottom: 20px; }
+                    th, td { border: 1px solid #d1d5db; padding: 8px; text-align: left; }
+                    th { background: #f3f4f6; }
+                    .total { font-weight: bold; margin-top: 10px; }
+                    .negative { color: #b91c1c; }
+                    .positive { color: #166534; }
+                </style>
+            </head>
+            <body>
+                <h1>Отчет по семейному бюджету</h1>
+
+                <h2>Доходы</h2>
+                <table>
+                    <thead>
+                        <tr><th>Наименование дохода</th><th>Сумма</th></tr>
+                    </thead>
+                    <tbody>
+                        ${formatRows(data.incomeItems)}
+                    </tbody>
+                </table>
+
+                <h2>Расходы</h2>
+                <table>
+                    <thead>
+                        <tr><th>Наименование расхода</th><th>Сумма</th></tr>
+                    </thead>
+                    <tbody>
+                        ${formatRows(data.expenseItems)}
+                    </tbody>
+                </table>
+
+                <h2>Судебные расходы</h2>
+                <table>
+                    <thead>
+                        <tr><th>Наименование судебного расхода</th><th>Сумма</th></tr>
+                    </thead>
+                    <tbody>
+                        ${formatRows(data.courtExpenseItems)}
+                    </tbody>
+                </table>
+
+                <p class="total">Итого доходы: ${data.income.toLocaleString()} руб.</p>
+                <p class="total">Итого расходы: ${data.totalExpenses.toLocaleString()} руб.</p>
+                <p class="total ${data.balance < 0 ? "negative" : "positive"}">
+                    Баланс: ${data.balance.toLocaleString()} руб.
+                </p>
+            </body>
+            </html>
+        `);
+
+        reportWindow.document.close();
+    }
+</script>
+
 </body>
 </html>
